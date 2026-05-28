@@ -38,16 +38,30 @@ void Person_rename(Person* self, char new_name[20]) {
 }
 
 void Person_drop(void* self) {
-    printf("[RAII] Person dropping...\n");
+    if (!self) return;
+    Person* p = (Person*) self;
+    printf("[RAII] Person(%s) dropping... \n", p->name);
 }
 
-impl_trait(Drop, Person, .drop = Person_drop);
+///NEVER DO IT LIKE THAT. THE STRUCT IS PLAIN, THERE IS NO POINT IN DEEP CLONING
+void* Person_clone(const void* self) {
+    Person* old_p = (Person*) self;
+    printf("Cloning Person(%s) \n", old_p->name);
+    Person* p = (Person*) malloc(sizeof(Person));
+    if (!p) return NULL;
+    strcpy(p->name, "Clone lmao");
+    p->move_speed = old_p->move_speed;
+    p->jump_height = old_p->jump_height;
+    return p;
+}
 
 impl_struct(Person,
     .new = Person_new,
     .rename = Person_rename
 )
 
+impl_trait(Drop, Person, .drop = Person_drop);
+impl_trait(Clone, Person, .clone = Person_clone);
 impl_trait(Speaker, Person, person_speak)
 impl_trait(Mover, Person, .jump = person_jump, .move = person_move)
 impl_traits_combo(MoverXSpeaker, Person, Mover, Speaker)

@@ -26,6 +26,8 @@ DECLARE_RESULT(Person, PERSON_NEW_ERROR);
 extern_trait(Speaker, Person)
 extern_trait(Mover, Person)
 extern_trait(MoverXSpeaker, Person)
+extern_trait(Drop, Person)
+extern_trait(Clone, Person)
 
 define_struct_methods(Person,
     Result(Person, PERSON_NEW_ERROR) (*new)(char name[20], int jump_height, int move_speed);

@@ -15,7 +15,11 @@ void test_box_person(char name[20], int jump_height, int move_speed) {
     Box(Person) p_box = box_new(Person, p);
     printf("Box Person values: %s %d %d\n", p_box->name, p_box->jump_height, p_box->move_speed);
     printf("Box Person have to be values: %s %d %d\n", name, jump_height, move_speed);
-    printf("Box(with person) must now be dropped via RAII\n");
+    printf("Testing box clone\n");
+    TraitObject(Clone) clone_trait_box = get_trait_object(p_box, Box, Clone);
+    Box(Person) cloned_box = clone_trait_box.vtable->clone(p_box);
+    printf("Cloned Box values: %s %d %d\n", cloned_box->name, p_box->jump_height, p_box->move_speed);
+    printf("Boxes(with person) must now be dropped via RAII\n");
 }
 
 void test_box() {
