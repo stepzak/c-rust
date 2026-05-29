@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <rust/box.h>
@@ -25,10 +26,11 @@ void* _box_alloc(size_t size, void (*drop_func)(void* data), void* (*clone_func)
 }
 
 void Box_drop(void* self) {
+    void** ptr = (void**)self;
     if (!self) return;
-    Box_Header* h = _box_header(self);
+    Box_Header* h = _box_header(ptr);
     if (h->drop_func) {
-        h->drop_func(self);
+        h->drop_func(ptr);
     }
     free(h);
 }

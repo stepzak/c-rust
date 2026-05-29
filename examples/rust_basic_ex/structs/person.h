@@ -21,6 +21,8 @@ struct Person {
     int move_speed;
 };
 
+DECLARE_C_RUST_TYPE(Person);
+
 DECLARE_RESULT(Person, PERSON_NEW_ERROR);
 
 extern_trait(Speaker, Person)

@@ -22,7 +22,17 @@ void test_box_person(char name[20], int jump_height, int move_speed) {
     printf("Boxes(with person) must now be dropped via RAII\n");
 }
 
+Box(int) test_box_return(int a) {
+    Box(int) b = box_new(int, a);
+    return move_out(b);
+}
+
 void test_box() {
     test_box_simple(1);
     test_box_person("Artem Loh", 5, 10);
+    Box(int) b = test_box_return(30);
+    printf("Box returned: %d\n", *b);
+    let(Person, p);
+    p.jump_height = 200;
+    printf("%d\n", p.jump_height);
 }

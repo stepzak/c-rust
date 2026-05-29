@@ -39,7 +39,7 @@ void Person_rename(Person* self, char new_name[20]) {
 
 void Person_drop(void* self) {
     if (!self) return;
-    Person* p = (Person*) self;
+    Person* p = self;
     printf("[RAII] Person(%s) dropping... \n", p->name);
 }
 

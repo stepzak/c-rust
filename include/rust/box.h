@@ -15,17 +15,6 @@ void _box_cleanup(void* ptr_to_box);
 void* _box_alloc(size_t size, void (*drop_func)(void* data), void* (*clone_func)(const void* data));
 
 #define _box_header(box) ((Box_Header*) (box) - 1)
-#define _get_drop_fn(T) \
-    ({ \
-        extern DropVTable T##_Drop_vtable __attribute__((weak)); \
-        (&T##_Drop_vtable != NULL) ? T##_Drop_vtable.drop : NULL; \
-    })
-
-#define _get_clone_fn(T) \
-    ({ \
-        extern CloneVTable T##_Clone_vtable __attribute__((weak)); \
-        (&T##_Clone_vtable != NULL) ? T##_Clone_vtable.clone : NULL; \
-    })
 
 #define Box(T) T* __attribute__((cleanup(_box_cleanup)))
 

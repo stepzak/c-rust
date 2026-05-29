@@ -1,6 +1,19 @@
 #ifndef TRAITS_H
 #define TRAITS_H
 
+#define _get_drop_fn(T) \
+    ({ \
+        extern DropVTable T##_Drop_vtable __attribute__((weak)); \
+        (&T##_Drop_vtable != NULL) ? T##_Drop_vtable.drop : NULL; \
+    })
+
+#define _get_clone_fn(T) \
+    ({ \
+        extern CloneVTable T##_Clone_vtable __attribute__((weak)); \
+        (&T##_Clone_vtable != NULL) ? T##_Clone_vtable.clone : NULL; \
+    })
+
+
 #define trait(TraitName, ...) \
     typedef struct TraitName##VTable { \
         __VA_ARGS__ \
@@ -10,8 +23,7 @@
         TraitName##VTable* vtable; \
     } TraitName##Object;
 
-#define impl_trait(TraitName, StructName, ...) \
-    TraitName##VTable StructName##_##TraitName##_vtable = { __VA_ARGS__ };
+#define impl_trait(TraitName, StructName, ...) TraitName##VTable StructName##_##TraitName##_vtable = { __VA_ARGS__ };
 
 #define TraitObject(TraitName) TraitName##Object
 
@@ -38,7 +50,9 @@
         .Trait2Name = &StructName##_##Trait2Name##_vtable  \
     };
 
-#define extern_trait(TraitName, StructName) extern TraitName##VTable StructName##_##TraitName##_vtable;
+
+#define extern_trait(TraitName, StructName)  extern TraitName##VTable StructName##_##TraitName##_vtable;
+
 
 #define define_struct_methods(StructName, ...) \
     typedef struct StructName##_StructVTable { __VA_ARGS__ } StructName##_StructVTable; \
